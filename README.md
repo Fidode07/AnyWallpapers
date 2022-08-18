@@ -26,6 +26,7 @@ I could now annoy everyone and say it is only the requirements.txt. But for once
   cd location/of/project
   python Engine.py
 ```
+After starting the Engine.py 1 time or the first time start the .exe, a shortcut to the .exe file should appear on the desktop. This means that the command does not have to be executed 1 more time afterwards.
   <br><br>
 <strong>Possible Errors:</strong>
 1. It is possible that an error occurs at step 3. This is often due to Python and pythonnet. In this case you can simply do:
@@ -34,7 +35,12 @@ I could now annoy everyone and say it is only the requirements.txt. But for once
 ```
 and then repeat step 3.
 
-After starting the Engine.py 1 time or the first time start the .exe, a shortcut to the .exe file should appear on the desktop. This means that the command does not have to be executed 1 more time afterwards.
+2. Is AnyWallpapers.exe not working? Please check first if the following is true: The .exe is in the same folder as the Engine.py (The Engine.py should also not be separated from the src and ext folder). If this is not the case, re-download the project so that the structure is correct. If it still doesn't work after that the error is in the settings.json. Usually "python Engine.py" is executed by the .exe, however sometimes it is "python3" or whatever. Go to settings.json and set the value of Python Path to "path/to/your/python/.exe". e.g.:
+```
+{
+  "python_path": "C:/Users/Fidode07/AppData/Local/Programs/Python/Python38/python.exe"
+}
+```
 
 # 🔥 Features 🔥
 1. Tray Icon
