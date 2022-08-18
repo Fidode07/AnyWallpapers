@@ -1,0 +1,10 @@
+pywin32
+future
+pystray
+pywebview
+opencv-python
+bs4
+beautifulsoup4
+Pillow
+screeninfo
+winshell

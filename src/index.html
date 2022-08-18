@@ -1,0 +1,776 @@
+<html lang="de">
+ <head>
+  <script src="js/PyBridge.js">
+  </script>
+  <script>
+   Element.prototype.remove = function () {
+            this.parentElement.removeChild(this);
+        }
+        NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
+            for (var i = this.length - 1; i >= 0; i--) {
+                if (this[i] && this[i].parentElement) {
+                    this[i].parentElement.removeChild(this[i]);
+                }
+            }
+        }
+
+        Element.prototype.addItem = function (item) {
+            this.appendChild(item);
+        }
+
+        NodeList.prototype.addItem = HTMLCollection.prototype.addItem = function (item) {
+            for (var i = this.length - 1; i >= 0; i--) {
+                this[i].appendChild(item);
+            }
+        }
+
+        function mouseX(evt) {
+            if (evt.pageX) {
+                return evt.pageX;
+            } else if (evt.clientX) {
+                return evt.clientX + (document.documentElement.scrollLeft ?
+                    document.documentElement.scrollLeft :
+                    document.body.scrollLeft);
+            } else {
+                return null;
+            }
+        }
+
+        function mouseY(evt) {
+            if (evt.pageY) {
+                return evt.pageY;
+            } else if (evt.clientY) {
+                return evt.clientY + (document.documentElement.scrollTop ?
+                    document.documentElement.scrollTop :
+                    document.body.scrollTop);
+            } else {
+                return null;
+            }
+        }
+
+        function docReady(fn) {
+            // see if DOM is already available
+            if (document.readyState === "complete" || document.readyState === "interactive") {
+                // call on next available tick
+                setTimeout(fn, 1);
+            } else {
+                document.addEventListener("DOMContentLoaded", fn);
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function containsAnyLetter(str) {
+            return /[a-zA-Z]/.test(str);
+        }
+
+        function create_wallpaper() {
+            wallpaper_name = document.getElementById('wallpaper-name');
+            if (containsAnyLetter(wallpaper_name.value)) {
+                pywebview.api.create_wallpaper(wallpaper_name.value);
+                document.getElementById('close-modal').click();
+            } else {
+                pywebview.api.incorrect_name();
+            }
+        }
+
+        docReady(function () {
+            document.getElementById('wallpaper-name').onkeypress = function (e) {
+                var chr = String.fromCharCode(e.which);
+                if (!("§$!-'\"|²³%&/{}[]()=?\\`´".indexOf(chr) < 0))
+                    return false;
+            };
+        });
+  </script>
+  <title>
+   AnyWallpaper
+  </title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" referrerpolicy="no-referrer" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" src="https://code.jquery.com/jquery-3.6.0.min.js">
+  </script>
+  <script>
+   var last_context_menu_id = 0;
+
+        $(document).bind("click", function (event) {
+            try {
+                oldContext = document.getElementById(last_context_menu_id);
+                oldContext.classList.remove('show');
+                oldContext.classList.add('hide');
+            } catch (e) {
+
+            }
+        });
+
+        function remove_hiding() {
+            var matches = document.getElementsByClassName('contextmenus');
+
+            for (var i = 0; i < matches.length; i++) {
+                matches[i].classList.remove('hide');
+            }
+        }
+
+        function show_context_menu(wallpaper_id) {
+            try {
+                document.getElementById(last_context_menu_id).classList.remove('show');
+                document.getElementById(last_context_menu_id).classList.add('hide');
+            } catch (e) {
+
+            }
+
+            ConMenu = document.getElementById(wallpaper_id);
+            ConMenu.className = 'show';
+            ConMenu.style.top = mouseY(event) + 'px';
+            ConMenu.style.left = mouseX(event) + 'px';
+            last_context_menu_id = wallpaper_id
+            // Now there 2 Menus. Now we have to cancel the Menu from the browser.
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+
+        window.addEventListener('pywebviewready', function () {
+            document.addEventListener('scroll', function (event) {
+                try {
+                    document.getElementById(last_context_menu_id).classList.remove('show');
+                    document.getElementById(last_context_menu_id).classList.add('hide');
+                } catch (e) {
+                    console.log("There was an error. But we Ignore!");
+                    console.log(e);
+                }
+
+            }, true /*Capture event*/);
+        });
+
+
+        function search() {
+            var input, filter, ul, li, a, i, txtValue;
+            var displayedNoneItems = 0;
+            input = document.getElementById("searchbar1");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("wallpaperContainer");
+            li = ul.getElementsByClassName("col-sm-4");
+            var allItems = li.length;
+            var NoResultsContainer = document.getElementById("3456345634563456noresultswasfound03033883839484848388383838388483");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("h5")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                    displayedNoneItems--;
+                } else {
+                    li[i].style.display = "none";
+                    displayedNoneItems++;
+                }
+            }
+
+            if (displayedNoneItems === allItems && input.value !== "") {
+                NoResultsContainer.innerHTML = "<h4 style='color: white;'>There no Results for '" + input.value + "'</h4>";
+            } else {
+                NoResultsContainer.innerHTML = "";
+            }
+        }
+
+        function open_settings() {
+
+        }
+  </script>
+  <style>
+   .slider {
+            -webkit-appearance: none; /* Override default CSS styles */
+            appearance: none;
+            width: 100%; /* Full-width */
+            background: #d3d3d3; /* Grey background */
+            outline: none; /* Remove outline */
+            opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+            -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+            transition: opacity .2s;
+            height: 15px;
+            border-radius: 5px;
+        }
+
+        .slider + .slider {
+            padding-bottom: 20px;
+        }
+
+        /* Mouse-over effects */
+        .slider:hover {
+            opacity: 1; /* Fully shown on mouse-over */
+        }
+
+        /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Override default look */
+            appearance: none;
+            width: 25px; /* Set a specific slider handle width */
+            height: 25px; /* Slider handle height */
+            background: #04AA6D; /* Green background */
+            border-radius: 50%;
+            cursor: pointer; /* Cursor on hover */
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px; /* Set a specific slider handle width */
+            background: #04AA6D; /* Green background */
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer; /* Cursor on hover */
+        }
+
+        #wallpaperContainer {
+            width: 150%;
+            position: absolute;
+            left: -15%;
+        }
+
+        .card {
+            height: 100%;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .select-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: .4s;
+        }
+
+        .select-btn:hover {
+            background-color: #45a049;
+        }
+
+        .select-btn:focus {
+            background-color: #2e6732;
+            transition: .4s;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .card-img-top {
+            border: none;
+            border-radius: 2px;
+            background: transparent;
+        }
+
+        .settingsButtonHeading {
+            margin-left: 2%;
+        }
+
+
+        .card-img-top:hover {
+            cursor: pointer;
+        }
+
+        .modal-content {
+            color: white;
+            background-color: #1D2329;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .settingsBTN {
+            border: none;
+            border-radius: 2px;
+            background: rgba(37, 227, 178, 0.7);
+            color: white;
+            padding: 10px 24px;
+        }
+
+        .settingsBTN:hover {
+            cursor: pointer;
+        }
+
+        body {
+            background-color: #1a1a1a;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        .btn-close {
+            background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fc0'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+        }
+
+        .add-icon {
+            color: white;
+            padding: 10px 20px;
+            background: #0D87EC;
+            border-radius: 2px;
+            border: none;
+            position: absolute;
+            left: 83%;
+            vertical-align: baseline;
+            top: 25px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            z-index: 100;
+            position: fixed;
+        }
+
+        .modal-body .btn-danger {
+            float: right;
+        }
+
+        .modal-body button {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+
+        .add-icon:hover {
+            transition: .3s;
+            cursor: pointer;
+            background: #0E5EA1;
+        }
+
+        .mybar {
+            z-index: 5;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        show {
+            z-index: 1000;
+            display: block;
+            margin: 0;
+            list-style-type: none;
+            list-style: none;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .show li {
+            list-style: none;
+        }
+
+        .show a {
+            border: 0 !important;
+            text-decoration: none;
+        }
+
+        .show a:hover {
+            text-decoration: underline !important;
+        }
+
+        .contextMenu, .contextMenu ul, .contextMenu li {
+            background: #113457;
+        }
+
+        .contextMenu {
+            display: none;
+        }
+
+        .context-menu-list-item:hover {
+            opacity: 0.7;
+            padding: 2px;
+            margin-left: 2%;
+            transition: .3s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            cursor: pointer;
+        }
+
+        .nav-item a:hover {
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        @font-face {
+            font-family: "manropeB";
+            src: url("fonts/manrope/fonts/webfonts/Manrope-ExtraBold.woff2") format('woff');
+            font-weight: bold;
+        }
+
+        .searchinp {
+            border: none;
+            background: rgba(29, 29, 29, 0.98);
+            color: white;
+            width: 50%;
+            padding: 10px 20px;
+            border-radius: 2px;
+            height: 7%;
+            position: fixed;
+            left: 25%;
+            vertical-align: baseline;
+            top: 25px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            z-index: 100;
+        }
+
+
+        html {
+            --scrollbarBG: #131212;
+            --thumbBG: #373434;
+        }
+
+        body::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        body {
+            scrollbar-width: thin;
+            scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+        }
+
+        body::-webkit-scrollbar-track {
+            background: var(--scrollbarBG);
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: var(--thumbBG);
+            border: 0px solid var(--scrollbarBG);
+        }
+
+
+        html {
+            overflow: hidden;
+        }
+
+        body {
+            overflow-y: auto;
+        }
+
+        .col-sm-4 {
+            height: 200px;
+            padding: 20px;
+        }
+  </style>
+ </head>
+ <body>
+  <script>
+   $ (document).ready(function() {
+        toggle_tab('wallpapers');
+    });
+  </script>
+  <div style="display: flex; height: 100%;">
+   <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark mybar" style="position: fixed; z-index: 2000; width: 240px; height: 100%;">
+    <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none" style="text-align: center;">
+     <span class="fs-4" style="text-align: center; font-family: manropeB; font-weight: bold;">
+      AnyWallpaper
+     </span>
+    </a>
+    <hr/>
+    <ul class="nav nav-pills flex-column mb-auto" id="pills-tab" role="tablist">
+     <li class="nav-item" role="presentation">
+      <a aria-selected="true" class="nav-link" onclick="toggle_tab('wallpapers');" style="vertical-align: center; background: transparent; color: white;">
+       <span class="justn" id="tabspanwallpapers">
+        <i class="fa-solid fa-images">
+        </i>
+        Wallpaper's
+       </span>
+      </a>
+     </li>
+     <li class="nav-item">
+      <a aria-selected="false" class="nav-link" id="pills-profile-tab" onclick="toggle_tab('youtube-wallpapers');" role="tab" style="vertical-align: center; background: transparent; color: grey;">
+       <span class="justn" id="tabspanyoutube-wallpapers">
+        <i class="fa-brands fa-youtube">
+        </i>
+        YouTube-Video Wallpaper
+       </span>
+      </a>
+     </li>
+    </ul>
+    <hr/>
+    <div class="dropdown">
+     <a aria-expanded="false" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" id="dropdownUser1">
+      <strong style="vertical-align: center;">
+       <i class="fa-solid fa-circle-chevron-down">
+       </i>
+       Settings &amp; More
+      </strong>
+     </a>
+     <ul aria-labelledby="dropdownUser1" class="dropdown-menu dropdown-menu-dark text-small shadow">
+      <li>
+       <a class="dropdown-item" data-bs-target="#createWallpaper" data-bs-toggle="modal" style="vertical-align: center;">
+        <i class="fa-solid fa-circle-plus" style="width: 16px; height: 16px;">
+        </i>
+        New Wallpaper
+       </a>
+      </li>
+      <li>
+       <a class="dropdown-item" onclick="pywebview.api.stop_engine();" style="vertical-align: center;">
+        <i class="fa-solid fa-hand">
+        </i>
+        Stop Engine
+       </a>
+      </li>
+      <li>
+       <a class="dropdown-item" data-bs-target="#settingsModal" data-bs-toggle="modal" onclick="open_settings();" style="vertical-align: center;">
+        <i class="fa-solid fa-gear">
+        </i>
+        Settings
+       </a>
+      </li>
+      <li>
+       <hr class="dropdown-divider"/>
+      </li>
+      <li>
+       <a class="dropdown-item" onclick="pywebview.api.close_ui();" style="vertical-align: center;">
+        <i class="fa-solid fa-rectangle-xmark">
+        </i>
+        Close GUI
+       </a>
+      </li>
+     </ul>
+    </div>
+   </div>
+   <div class="tab-content tab" id="wallpapers">
+    <div aria-labelledby="pills-home-tab" class="tab-pane fade show active" id="pills-home" role="tabpanel">
+     <div aria-labelledby="pills-home-tab" id="WallpapersSection1">
+      <input class="searchinp" id="searchbar1" maxlength="177" onclick="search();" onkeydown="search();" onkeyup="search();" placeholder="Search Wallpaper ..." type="search"/>
+      <a>
+       <button class="add-icon" data-bs-target="#createWallpaper" data-bs-toggle="modal">
+        New Wallpaper
+        <i class="fa-solid fa-circle-plus" style="width: 16px; height: 16px;">
+        </i>
+       </button>
+      </a>
+      <div class="container mt-5" style="z-index: 1; padding-left: 340px;">
+       <br/>
+       <br/>
+       <div class="ehhnoresults3898938938933" id="3456345634563456noresultswasfound03033883839484848388383838388483" style="width: 550px; word-break: break-all;">
+       </div>
+       <div style="position: relative;">
+        <div class="row" id="wallpaperContainer">
+        </div>
+       </div>
+      </div>
+      <div class="modal fade" id="createWallpaper">
+       <div class="modal-dialog">
+        <div class="modal-content">
+         <!-- Modal Header -->
+         <div class="modal-header">
+          <h4 class="modal-title">
+           Create new Wallpaper
+          </h4>
+          <button class="btn-close" data-bs-dismiss="modal" type="button">
+          </button>
+         </div>
+         <!-- Modal body -->
+         <div class="modal-body">
+          <div class="mb-3 mt-3">
+           <label class="form-label">
+            Name:
+           </label>
+           <input autocomplete="off" class="form-control" id="wallpaper-name" maxlength="160" name="wallpapername" placeholder="Enter Wallpaper Name" type="text"/>
+           <button class="form-control select-btn" onclick="pywebview.api.select_video_file();">
+            Select Wallpaper File
+           </button>
+          </div>
+         </div>
+         <!-- Modal footer -->
+         <div class="modal-footer">
+          <button class="btn btn-primary" onclick="create_wallpaper();" type="submit">
+           Create Wallpaper
+          </button>
+          <button class="btn btn-danger" data-bs-dismiss="modal" id="close-modal" type="button">
+           Cancel
+          </button>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div id="editPapers">
+      </div>
+      <div class="contextmenus">
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="tab-pane tab" id="youtube-wallpapers" role="tabpanel">
+    <div style="padding-left: 340px;">
+     <div class="container mt-5" style="z-index: 1; padding-left: 80px; color: white;">
+      <div class="row">
+       <h1 style="color: white;">
+        YouTube Video:
+       </h1>
+       <div style="width: 100%;">
+        <div class="mb-3">
+         <label class="form-label">
+          Video-Link:
+         </label>
+         <input class="form-control" id="youtubelinkinput" placeholder="https://www.youtube.com/watch?v=......" required="" type="url"/>
+        </div>
+        <button class="btn btn-primary" onclick="var YouTubeVideoLink = document.getElementById('youtubelinkinput').value; pywebview.api.set_yt_wallpaper(YouTubeVideoLink);" type="submit">
+         Use Wallpaper
+        </button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="modal" id="settingsModal" style="border-radius: 0px; z-index: 99999; background: rgba(0, 0, 0, 0.6);">
+   <div class="modal-dialog modal-xl" style="border-radius: 0px;">
+    <div class="modal-content" style="border-radius: 0px;">
+     <!-- Modal Header -->
+     <div class="modal-header">
+      <div id="nav-tab2" role="tablist" style="display: flex; margin-left: -2%; vertical-align: center;">
+       <h4 class="settingsButtonHeading" style="vertical-align: center;">
+        <button class="settingsBTN" onclick="document.getElementById('perfomancetab').style.display = 'none'; document.getElementById('wallpaperstab').style.display = 'none'; document.getElementById('guitab').style.display = 'none'; document.getElementById('generaltab').style.display = 'block'; document.getElementById('taskbartab').style.display = 'none';" style="vertical-align: center;">
+         <i class="fa-solid fa-window-maximize">
+         </i>
+         <strong>
+          General
+         </strong>
+        </button>
+       </h4>
+       <h4 class="settingsButtonHeading" style="vertical-align: center;">
+        <button class="settingsBTN" onclick="document.getElementById('perfomancetab').style.display = 'none'; document.getElementById('wallpaperstab').style.display = 'none'; document.getElementById('generaltab').style.display = 'none'; document.getElementById('guitab').style.display = 'block'; document.getElementById('taskbartab').style.display = 'none';" style="vertical-align: center;">
+         <i class="fa-solid fa-window-maximize">
+         </i>
+         <strong>
+          GUI
+         </strong>
+        </button>
+       </h4>
+       <h4 class="settingsButtonHeading" style="vertical-align: center;">
+        <button class="settingsBTN" onclick="document.getElementById('guitab').style.display = 'none'; document.getElementById('wallpaperstab').style.display = 'none'; document.getElementById('generaltab').style.display = 'none'; document.getElementById('perfomancetab').style.display = 'block'; document.getElementById('taskbartab').style.display = 'none';" style="vertical-align: center;">
+         <i class="fa-solid fa-gauge-high">
+         </i>
+         <strong>
+          Perfomance
+         </strong>
+        </button>
+       </h4>
+       <h4 class="settingsButtonHeading" style="vertical-align: center;">
+        <button class="settingsBTN" onclick="document.getElementById('guitab').style.display = 'none'; document.getElementById('generaltab').style.display = 'none'; document.getElementById('perfomancetab').style.display = 'none'; document.getElementById('wallpaperstab').style.display = 'block'; document.getElementById('taskbartab').style.display = 'none';" style="vertical-align: center;">
+         <i class="fa-solid fa-gauge-high">
+         </i>
+         <strong>
+          Wallpaper
+         </strong>
+        </button>
+       </h4>
+       <h4 class="settingsButtonHeading" style="vertical-align: center;">
+        <button class="settingsBTN" onclick="document.getElementById('guitab').style.display = 'none'; document.getElementById('generaltab').style.display = 'none'; document.getElementById('perfomancetab').style.display = 'none'; document.getElementById('wallpaperstab').style.display = 'none'; document.getElementById('taskbartab').style.display = 'block';" style="vertical-align: center;">
+         <i class="fa-solid fa-gauge-high">
+         </i>
+         <strong>
+          Taskbar
+         </strong>
+        </button>
+       </h4>
+      </div>
+     </div>
+     <!-- Modal body -->
+     <div class="modal-body">
+      <div id="generaltab">
+       <div style="margin-left: 4%;">
+        <div class="form-check form-switch" style="font-size: 20px; vertical-align: center;">
+         <input checked="" class="form-check-input" id="bootwithwindows" type="checkbox"/>
+         <label class="form-check-label" for="bootwithwindows">
+          Start with Windows
+         </label>
+        </div>
+       </div>
+      </div>
+      <div id="taskbartab" style="display: none; vertical-align: center;">
+       <div style="margin-left: 0%;">
+        <div class="form-check form-switch" style="font-size: 20px; vertical-align: center;">
+         <input class="form-check-input" id="hidetaskbar" type="checkbox"/>
+         <label class="form-check-label" for="hidetaskbar">
+          Hide Taskbar
+         </label>
+         <br/>
+         <br/>
+         <label for="taskbaropacity">
+          Taskbar Transparency:
+         </label>
+         <div class="input-group mb-3" style="width: 30%;">
+          <span class="input-group-text" id="inputGroup-sizing-default">
+           0-255
+          </span>
+          <input aria-describedby="inputGroup-sizing-default" aria-label="baropacity" class="form-control" id="taskbaropacity" max="255" maxlength="3" min="0" onkeyup="changeTaskbarOpacity();" type="number"/>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div id="guitab" style="display: none;">
+       <div style="margin-left: 4%;">
+        <div class="form-check form-switch" style="font-size: 20px; vertical-align: center;">
+         <input checked="" class="form-check-input" id="usecorsairkeyboard" type="checkbox"/>
+         <label class="form-check-label" for="usecorsairkeyboard">
+          Change Keyboard Color
+          <strong>
+           (Only Corsair)
+          </strong>
+         </label>
+        </div>
+       </div>
+      </div>
+      <div id="wallpaperstab" style="display: none;">
+       <div style="margin-left: 4%;">
+        <div class="form-check form-switch" style="font-size: 20px; vertical-align: center;">
+         <input checked="" class="form-check-input" id="muteytwallpapers" type="checkbox"/>
+         <label class="form-check-label" for="muteytwallpapers">
+          Mute YouTube Wallpaper's
+         </label>
+        </div>
+       </div>
+      </div>
+      <div id="perfomancetab" style="display: none;">
+       <h1>
+        But here is a nice Perfomance Settings Tab!
+       </h1>
+      </div>
+     </div>
+     <div class="modal-footer">
+      <button class="settingsBTN" data-bs-dismiss="modal" type="button">
+       Close
+      </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+   $('#usecorsairkeyboard').change(function () {
+        if ($('#usecorsairkeyboard').is(":checked")) {
+            pywebview.api.settings("usecorsairkeyboard");
+        } else {
+            pywebview.api.settings("usecorsairkeyboard");
+        }
+    });
+
+    $('#bootwithwindows').change(function () {
+        pywebview.api.settings("bootwithwindows");
+    });
+
+    $('#muteytwallpapers').change(function () {
+        pywebview.api.settings("muteytwallpapers");
+    });
+
+    $('#hidetaskbar').change(function () {
+        pywebview.api.settings("hidetaskbar");
+    });
+
+    $('#taskbaropacity').on('keydown keyup change', function (e) {
+        if ($(this).val() > 255
+            && e.keyCode !== 46 // keycode for delete
+            && e.keyCode !== 8 // keycode for backspace
+        ) {
+            e.preventDefault();
+            $(this).val(255);
+            pywebview.api.set_taskbar_opacity(255);
+        } else {
+            pywebview.api.set_taskbar_opacity(document.getElementById("taskbaropacity").value);
+        }
+    });
+  </script>
+ </body>
+</html>
