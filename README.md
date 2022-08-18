@@ -21,7 +21,7 @@ I could now annoy everyone and say it is only the requirements.txt. But for once
   pip install -r requirements.txt
 ```
 4. Download WebView2 Runtime
-5. Enjoy the Engine with:
+5. Enjoy the Engine by start "AnyWallpapers.exe" or with:
 ```
   cd location/of/project
   python Engine.py
@@ -34,7 +34,7 @@ I could now annoy everyone and say it is only the requirements.txt. But for once
 ```
 and then repeat step 3.
 
-After starting the Engine.py 1 time, a shortcut to the .exe file should appear on the desktop. This means that the command does not have to be executed 1 more time afterwards.
+After starting the Engine.py 1 time or the first time start the .exe, a shortcut to the .exe file should appear on the desktop. This means that the command does not have to be executed 1 more time afterwards.
 
 # 🔥 Features 🔥
 1. Tray Icon
