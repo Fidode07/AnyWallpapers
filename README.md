@@ -13,14 +13,14 @@ I could now annoy everyone and say it is only the requirements.txt. But for once
 4. <strong>Windows 10</strong> - No idea if it works on other Windows versions (Linux currently not supported)
 
 # 📝 Usage 📝
-1. Download .NET6 (The Python requirements can only be installed after that)
-2. Download Python if not installed
+1. <a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0">Download .NET6</a> (The Python requirements can only be installed after that)
+2. <a href="https://www.python.org/downloads/release/python-388rc1/">Download Python</a> <strong>if not installed</strong>
 3. Install Requirements Download the requirements with the following commands:
 ```
   cd location/of/project
   pip install -r requirements.txt
 ```
-4. Download WebView2 Runtime
+4. <a href="https://developer.microsoft.com/de-de/microsoft-edge/webview2/">Download WebView2 Runtime</a> (Installer)
 5. Enjoy the Engine by start "AnyWallpapers.exe" or with:
 ```
   cd location/of/project
