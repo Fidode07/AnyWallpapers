@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AnyWallpaper's - Everything your desktop needs</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <meta name="author" content="Fido_de07">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="AnyWallpaper's is a App that allows you to use Videos as your Wallpaper.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+          integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            word-break: break-word;
+            word-wrap: break-word;
+            vertical-align: baseline;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        body {
+            margin-left: -99999px;
+            opacity: 0;
+        }
+
+        nav * {
+            color: white;
+        }
+
+        .container .content {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .container .content .title {
+            font-size: 5.5em;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .container .content .title {
+                font-size: 3em;
+            }
+        }
+
+        .container .content p {
+            font-size: 1.5em;
+        }
+
+        .container .content .btn {
+            font-size: 1.5em;
+            margin-top: 10px;
+            border: none;
+            padding: 10px;
+            background-color: #24292f;
+            color: white;
+            border-radius: 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: .4s;
+        }
+
+        .container .content .btn:hover {
+            background-color: #11161d;
+            transition: .2s;
+            color: white;
+        }
+
+        .all {
+            padding-bottom: 100px;
+            color: white;
+            background: linear-gradient(
+                    rgba(0, 0, 0, 0.7),
+                    rgba(0, 0, 0, 0.7)
+            ), url('src/AnyWallpapersBG.png') no-repeat center center;
+        }
+
+        .fa-windows {
+            color: #528dd7;
+        }
+
+        .infocard {
+            border: none;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            width: 90%;
+            text-align: center;
+            padding: 10px;
+            margin: 0 auto;
+        }
+
+        .infocard .iconbox {
+            background-color: #410650;
+            height: 5rem;
+            width: 5rem;
+            font-size: 1.75rem;
+            text-align: center;
+            border-radius: 50%;
+            margin: 0 auto;
+            color: white;
+        }
+
+        .infocard .iconbox i {
+            height: 1.75rem;
+            padding-top: 1.55rem;
+            width: 1.75rem;
+        }
+
+        footer {
+            color: lightgray;
+            padding: 45px 20px;
+            background: #1f273a;
+        }
+
+        footer .content-container {
+            display: flex;
+            justify-content: space-between;
+            width: 75%;
+            margin: 0 auto;
+            padding-top: 10px;
+        }
+
+        .col-sm-4 {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("body").animate({
+                marginLeft: "0",
+                opacity: "0.4"
+            }, 500, function () {
+                $("body").animate({
+                    opacity: "1",
+                }, 600);
+            });
+        });
+    </script>
+</head>
+<body>
+
+<div class="all">
+    <nav class="navbar" style="padding: 20px 20px; ">
+        <a class="navbar-brand"><img style="width: 20vh;" src="src/logo.svg"/></a>
+    </nav>
+    <div class="container">
+        <div class="content">
+            <h1 class="title">AnyWallpaper's</h1>
+            <h1 style="font-size: 3vm;">Everything your Desktop needs</h1>
+            <br><br>
+            <p>Use videos and GIFs as wallpaper and bring your desktop to life with them.</p>
+            <a href="https://github.com/Fidode07/AnyWallpapers" target="_blank">
+                <button class="btn">Show on GitHub <i class="fa-brands fa-github"></i></button>
+            </a>
+            <br><br>
+            <p>Supported Platforms: <i class="fa-brands fa-windows"></i></p>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="infocard">
+                <div class="iconbox">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <br>
+                <h3>Built for performance</h3>
+                <p>As soon as you maximize an application or start a game, the wallpaper on the respective
+                    screen is automatically paused. This way you get your performance as soon as you need it.</p>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="infocard">
+                <div class="iconbox">
+                    <i style="margin-left: -2px;" class="fa-solid fa-display"></i>
+                </div>
+                <br>
+                <h3>Multiple screen support</h3>
+                <p>AnyWallpaper's can easily cope with multiple screens. The resolution and aspect ratio
+                    do not matter.</p>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="infocard">
+                <div class="iconbox">
+                    <i class="fa-solid fa-pen"></i>
+                </div>
+                <br>
+                <h3>Choose your style</h3>
+                <p>You have found a cool video, but for example the color does not suit you? All good,
+                    the engine has things like hue-rotate, sepia, contrast and more, so you can edit everything
+                    the way you want.</p>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="infocard">
+                <div class="iconbox">
+                    <i style="margin-left: -5px;" class="fa-solid fa-code"></i>
+                </div>
+                <br>
+                <h3>Open Source</h3>
+                <p>AnyWallpaper's is open source and licensed under the GNU General Public License v3.0. You can find
+                    the source code
+                    on GitHub.</p>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="infocard">
+                <div class="iconbox">
+                    <i class="fa-solid fa-brush"></i>
+                </div><br>
+                <h3>Easy to modify</h3>
+                <p>The engine is written in html. What does that mean? You can easily change the design of
+                    your engine the way you want it.</p>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="infocard">
+                <div class="iconbox">
+                    <i style="margin-left: -2px;" class="fa-brands fa-youtube"></i>
+                </div><br>
+                <h3>YouTube Support</h3>
+                <p>Yes, you heard right. The engine also supports YouTube videos. With this feature, you'll never have
+                    to download a video again. Stream comfortably via the URL.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br><br>
+<footer>
+    <br><br>
+    <hr style="text-align: center; margin: 0 auto; width: 75%;">
+    <div class="content-container">
+        <h6><a href="https://github.com/Fidode07" target="_blank">By Fido_de07</a></h6>
+    </div>
+</footer>
+</body>
+</html>

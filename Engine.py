@@ -19,6 +19,11 @@ from win32com.client import Dispatch
 
 
 if __name__ == '__main__':
+    if not os.path.isfile("settings.json"):
+        with open("settings.json", "w", encoding="utf-8") as f:
+            f.write('{
+    			"python_path": ""
+                    }')
     desktop = winshell.desktop()
     path = os.path.join(desktop, "AnyWallpapers.lnk")
     if not os.path.isfile(path):
