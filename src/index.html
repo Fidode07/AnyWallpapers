@@ -14,16 +14,6 @@
             }
         }
 
-        Element.prototype.addItem = function (item) {
-            this.appendChild(item);
-        }
-
-        NodeList.prototype.addItem = HTMLCollection.prototype.addItem = function (item) {
-            for (var i = this.length - 1; i >= 0; i--) {
-                this[i].appendChild(item);
-            }
-        }
-
         function mouseX(evt) {
             if (evt.pageX) {
                 return evt.pageX;
@@ -141,11 +131,10 @@
                     document.getElementById(last_context_menu_id).classList.remove('show');
                     document.getElementById(last_context_menu_id).classList.add('hide');
                 } catch (e) {
-                    console.log("There was an error. But we Ignore!");
-                    console.log(e);
+
                 }
 
-            }, true /*Capture event*/);
+            }, true);
         });
 
 
@@ -449,6 +438,10 @@
             height: 200px;
             padding: 20px;
         }
+
+        * .dropdown li, * .dropdown a {
+            cursor: pointer;
+        }
   </style>
  </head>
  <body>
@@ -491,7 +484,7 @@
       <strong style="vertical-align: center;">
        <i class="fa-solid fa-circle-chevron-down">
        </i>
-       Settings &amp; More
+       Options
       </strong>
      </a>
      <ul aria-labelledby="dropdownUser1" class="dropdown-menu dropdown-menu-dark text-small shadow">
@@ -509,6 +502,7 @@
         Stop Engine
        </a>
       </li>
+      <!-- We add this later
       <li>
        <a class="dropdown-item" data-bs-target="#settingsModal" data-bs-toggle="modal" onclick="open_settings();" style="vertical-align: center;">
         <i class="fa-solid fa-gear">
@@ -519,6 +513,7 @@
       <li>
        <hr class="dropdown-divider"/>
       </li>
+       -->
       <li>
        <a class="dropdown-item" onclick="pywebview.api.close_ui();" style="vertical-align: center;">
         <i class="fa-solid fa-rectangle-xmark">
@@ -615,10 +610,10 @@
     </div>
    </div>
   </div>
+  <!-- This Settings Modal isn't finished currently.
   <div class="modal" id="settingsModal" style="border-radius: 0px; z-index: 99999; background: rgba(0, 0, 0, 0.6);">
    <div class="modal-dialog modal-xl" style="border-radius: 0px;">
     <div class="modal-content" style="border-radius: 0px;">
-     <!-- Modal Header -->
      <div class="modal-header">
       <div id="nav-tab2" role="tablist" style="display: flex; margin-left: -2%; vertical-align: center;">
        <h4 class="settingsButtonHeading" style="vertical-align: center;">
@@ -668,7 +663,6 @@
        </h4>
       </div>
      </div>
-     <!-- Modal body -->
      <div class="modal-body">
       <div id="generaltab">
        <div style="margin-left: 4%;">
@@ -738,39 +732,6 @@
     </div>
    </div>
   </div>
-  <script>
-   $('#usecorsairkeyboard').change(function () {
-        if ($('#usecorsairkeyboard').is(":checked")) {
-            pywebview.api.settings("usecorsairkeyboard");
-        } else {
-            pywebview.api.settings("usecorsairkeyboard");
-        }
-    });
-
-    $('#bootwithwindows').change(function () {
-        pywebview.api.settings("bootwithwindows");
-    });
-
-    $('#muteytwallpapers').change(function () {
-        pywebview.api.settings("muteytwallpapers");
-    });
-
-    $('#hidetaskbar').change(function () {
-        pywebview.api.settings("hidetaskbar");
-    });
-
-    $('#taskbaropacity').on('keydown keyup change', function (e) {
-        if ($(this).val() > 255
-            && e.keyCode !== 46 // keycode for delete
-            && e.keyCode !== 8 // keycode for backspace
-        ) {
-            e.preventDefault();
-            $(this).val(255);
-            pywebview.api.set_taskbar_opacity(255);
-        } else {
-            pywebview.api.set_taskbar_opacity(document.getElementById("taskbaropacity").value);
-        }
-    });
-  </script>
+ -->
  </body>
 </html>

@@ -1,4 +1,5 @@
 import json
+import socket
 from pathlib import Path
 import os
 import re
@@ -38,8 +39,10 @@ class Helper:
         self.__current_wallpaper: str = ""
         self.__filter_types: list = ["blur", "brightness", "contrast", "grayscale", "hue-rotate",
                                      "invert", "saturate", "sepia"]
-        self.blacklist: list = ["Microsoft Text Input Application"]
+        self.blacklist: list = ["Microsoft Text Input Application", "Unbenannt ‎- Paint 3D", "Unbenannt - Paint 3D",
+                                "Window", ""]
         self.__paused_screens: list = []
+        self.__ping_thread = threading.Thread(target=self.ping_callback).start()
 
     def __get_dominant_color(self, img_path: str) -> dict:
         img = cv2.imread(img_path)
@@ -103,7 +106,12 @@ class Helper:
             except KeyError:
                 # The window is already closed.
                 pass
-        self.__icon.stop()
+        try:
+            self.__icon.stop()
+        except Exception:
+            # This can happen if the icon doesn't exist (Cuz there was an error before it was created)
+            pass
+        print("INFO: The KeyError can be ignored. It's normal and happens when a window is already closed.")
 
     def stop_engine(self) -> None:
         self.__quit()
@@ -251,7 +259,6 @@ class Helper:
     def __show_error(self, title: str, msg: str) -> None:
         try:
             if self.__ui is not None:
-                print(msg)
                 self.__ui.evaluate_js(f"alert_error('{title}', '{msg}');")
         except KeyError:
             # He Closed the UI
@@ -627,8 +634,18 @@ class Helper:
             f.write(soup.prettify(encoding="utf-8"))
 
     def repair_wallpaper(self) -> None:
+        highest_time: int = 0
+        for w in self.__screen_windows.values():
+            window_time: int = w["window"].evaluate_js("document.getElementsByTagName('video')[0].currentTime;")
+            if window_time > highest_time:
+                highest_time = window_time
+
         for window in self.__screen_windows.values():
             self.__send_behind(window["handle"])
+            window["window"].evaluate_js("let video = document.getElementsByTagName('video')[0]; video.play(); "
+                                         "video.currentTime = {};".format(highest_time))
+
+        self.__paused_screens = []
 
     def create_range_with_label(self, name: str, label_str: str, span_str: str, min_val: int, max_val: int,
                                 value: int, step, data_type: str, setting: str) -> tuple:
@@ -740,6 +757,30 @@ class Helper:
         win32gui.SetParent(hwnd, prog_man)
 
         win32gui.ShowWindow(self.worker, win32con.SW_SHOW)
+
+    def ping_callback(self) -> None:
+        try:
+            # Here we create TCP Server
+            s = socket.socket()
+            s.bind(('0.0.0.0', 39483))
+            s.listen(5)
+            while True:
+                c, addr = s.accept()
+                c.send(b'reachable')
+                c.close()
+        except Exception as e:
+            # If this Happens, the Engine can also start. Probably it will take a lot of performance if the user
+            # dont starts the engine with the TrayIcon. Thats because the engine will start the Background Video for
+            # every UI Window again. As e.g. when i click on the Desktop Shortcut to start the engine, the engine
+            # creates new Windows which gets send behind. But the old still exists, so it takes 2 * performance.
+            self.__quit()
+            root = tkinter.Tk()
+            root.withdraw()
+            tkinter.messagebox.showwarning("Warning", "The Engine can not start.\nPlease start it with the TrayIcon."
+                                                      "Also make sure that the port 39483 is not used by another "
+                                                      "application.")
+            root.destroy()
+            pass
 
     def __enum(self, hwnd, ctx) -> None:
         shelldll = win32gui.FindWindowEx(0, 0, "SHELLDLL_DefView", None)
@@ -924,7 +965,7 @@ class Helper:
         def window_callback(hwnd: int, extra: list):
             if win32gui.IsWindowVisible(hwnd):
                 title: str = win32gui.GetWindowText(hwnd)
-                if title not in self.blacklist and "overlay" not in title:
+                if title not in self.blacklist and "overlay" not in title.lower():
                     extra.append(hwnd)
             return True
 
