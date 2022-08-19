@@ -51,4 +51,10 @@ and then repeat step 3.
 6. Powerful "editor" (It is rather an editor tab) to edit the video into a new dimension
 
 # ❓ How to use? ❓
-There are things that are not so obvious. Here I will explain a few things
+There are things that are not so obvious. Here I will explain a few things.
+<br>
+<h2>1. Where can I find the "Editor"?</h2>  
+<p align="center">Well, that is quite simple. Just right-click on the wallpaper you want to edit. Then you should see an option called "Edit". Just click on it.</p>
+
+<h2>2. How can I use a YouTube video as wallpaper?</h2>
+<p align="center">In the sidebar you have an option called "YouTube Video Wallpaper". Click on the option and then paste the link of the YouTube video you want to have into the text field. Now just click on "Use Wallpaper" and you're done.</p>
