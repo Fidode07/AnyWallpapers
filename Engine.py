@@ -34,7 +34,8 @@ if __name__ == '__main__':
             import tkinter, tkinter.messagebox
             root = tkinter.Tk()
             root.withdraw()
-            tkinter.messagebox.showerror("Error", "Another instance of AnyWallpapers is running. Please start the app via the tray icon in the taskbar.")
+            tkinter.messagebox.showerror("Error", "Another instance of AnyWallpapers is running. "
+                                                  "Please start the app via the tray icon in the taskbar.")
             root.destroy()
             sys.exit()
 

@@ -1,6 +1,5 @@
 import ctypes
 import json
-import socket
 from pathlib import Path
 import os
 import re
@@ -12,6 +11,7 @@ import tkinter.messagebox
 import pystray
 from PIL import Image
 import threading
+# win32gui is in pywin32. Note: Python 3.7 is maybe not compatible with win32gui.
 import win32gui
 import win32con
 import time
