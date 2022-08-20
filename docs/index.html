@@ -54,7 +54,7 @@
             font-size: 1.5em;
         }
 
-        .container .content .btn {
+        .github-btn {
             font-size: 1.5em;
             margin-top: 10px;
             border: none;
@@ -66,7 +66,7 @@
             transition: .4s;
         }
 
-        .container .content .btn:hover {
+        .github-btn:hover {
             background-color: #11161d;
             transition: .2s;
             color: white;
@@ -92,6 +92,32 @@
             text-align: center;
             padding: 10px;
             margin: 0 auto;
+            cursor: pointer;
+            transition: .4s;
+        }
+
+        footer .content-container {
+            display: block;
+            width: 90%;
+            text-align: center;
+            margin: 0 auto;
+            padding-top: 10px;
+        }
+
+        @media only screen and (min-width: 1100px) {
+            .infocard:hover {
+                border: none;
+                transform: rotate(3deg);
+                transition: .5s;
+            }
+
+            footer .content-container {
+                display: flex;
+                justify-content: space-between;
+                width: 75%;
+                margin: 0 auto;
+                padding-top: 10px;
+            }
         }
 
         .infocard .iconbox {
@@ -115,14 +141,6 @@
             color: lightgray;
             padding: 45px 20px;
             background: #1f273a;
-        }
-
-        footer .content-container {
-            display: flex;
-            justify-content: space-between;
-            width: 75%;
-            margin: 0 auto;
-            padding-top: 10px;
         }
 
         .col-sm-4 {
@@ -155,7 +173,7 @@
             <br><br>
             <p>Use videos and GIFs as wallpaper and bring your desktop to life with them.</p>
             <a href="https://github.com/Fidode07/AnyWallpapers" target="_blank">
-                <button class="btn">Show on GitHub <i class="fa-brands fa-github"></i></button>
+                <button class="github-btn">Show on GitHub <i class="fa-brands fa-github"></i></button>
             </a>
             <br><br>
             <p>Supported Platforms: <i class="fa-brands fa-windows"></i></p>
@@ -217,7 +235,8 @@
             <div class="infocard">
                 <div class="iconbox">
                     <i class="fa-solid fa-brush"></i>
-                </div><br>
+                </div>
+                <br>
                 <h3>Easy to modify</h3>
                 <p>The engine is written in html. What does that mean? You can easily change the design of
                     your engine the way you want it.</p>
@@ -228,7 +247,8 @@
             <div class="infocard">
                 <div class="iconbox">
                     <i style="margin-left: -2px;" class="fa-brands fa-youtube"></i>
-                </div><br>
+                </div>
+                <br>
                 <h3>YouTube Support</h3>
                 <p>Yes, you heard right. The engine also supports YouTube videos. With this feature, you'll never have
                     to download a video again. Stream comfortably via the URL.</p>
@@ -243,6 +263,13 @@
     <hr style="text-align: center; margin: 0 auto; width: 75%;">
     <div class="content-container">
         <h6><a href="https://github.com/Fidode07" target="_blank">By Fido_de07</a></h6>
+        <h6>License: GNU General Public License v3.0</h6>
+    </div>
+        <br><br>
+    <div style="margin: 0 auto; text-align: center;">
+        <a href="https://github.com/Fidode07/AnyWallpapers" target="_blank">
+            <button class="github-btn">Show on GitHub <i class="fa-brands fa-github"></i></button>
+        </a>
     </div>
 </footer>
 </body>
