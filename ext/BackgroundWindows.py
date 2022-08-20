@@ -1,3 +1,4 @@
+import ctypes
 import json
 import socket
 from pathlib import Path
@@ -42,7 +43,6 @@ class Helper:
         self.blacklist: list = ["Microsoft Text Input Application", "Unbenannt ‎- Paint 3D", "Unbenannt - Paint 3D",
                                 "Window", ""]
         self.__paused_screens: list = []
-        self.__ping_thread = threading.Thread(target=self.ping_callback).start()
 
     def __get_dominant_color(self, img_path: str) -> dict:
         img = cv2.imread(img_path)
@@ -137,9 +137,11 @@ class Helper:
     def log(self, msg: str) -> None:
         print(msg)
 
-    def build_filter(self, given_filters: dict = {}) -> str:
+    def build_filter(self, given_filters=None) -> str:
         # The return looks like: blur(10) brightness(10) contrast(10) grayscale(10) hue-rotate(10) invert(10)
         # saturate(10) sepia(10)
+        if given_filters is None:
+            given_filters = {}
         filter_string: str = ""
         config: dict = json.loads(open(self.__current_wallpaper.replace("index.html", "video_config.json"), "r").read())
         for filter_type in self.__filter_types:
@@ -175,7 +177,7 @@ class Helper:
 
     def set_yt_wallpaper(self, url: str) -> None:
         video_id: str = re.findall(r'(?<=v=)[^&#]+', url)[0]
-        embed_url: str = f"https://www.youtube.com/embed/{video_id}?autoplay=1&mute=1&loop=1&playlist={video_id}&vq=hd1080"
+        embed_url: str = f"https://www.youtube.com/embed/{video_id}?autoplay=1&mute=1&loop=1&playlist={video_id}"
         for w in self.__screen_windows.values():
             w["window"].load_url(embed_url)
             w["window"].show()
@@ -259,7 +261,7 @@ class Helper:
     def __show_error(self, title: str, msg: str) -> None:
         try:
             if self.__ui is not None:
-                self.__ui.evaluate_js(f"alert_error('{title}', '{msg}');")
+                ctypes.windll.user32.MessageBoxW(0, msg, title, 0)
         except KeyError:
             # He Closed the UI
             pass
@@ -758,30 +760,6 @@ class Helper:
 
         win32gui.ShowWindow(self.worker, win32con.SW_SHOW)
 
-    def ping_callback(self) -> None:
-        try:
-            # Here we create TCP Server
-            s = socket.socket()
-            s.bind(('0.0.0.0', 39483))
-            s.listen(5)
-            while True:
-                c, addr = s.accept()
-                c.send(b'reachable')
-                c.close()
-        except Exception as e:
-            # If this Happens, the Engine can also start. Probably it will take a lot of performance if the user
-            # dont starts the engine with the TrayIcon. Thats because the engine will start the Background Video for
-            # every UI Window again. As e.g. when i click on the Desktop Shortcut to start the engine, the engine
-            # creates new Windows which gets send behind. But the old still exists, so it takes 2 * performance.
-            self.__quit()
-            root = tkinter.Tk()
-            root.withdraw()
-            tkinter.messagebox.showwarning("Warning", "The Engine can not start.\nPlease start it with the TrayIcon."
-                                                      "Also make sure that the port 39483 is not used by another "
-                                                      "application.")
-            root.destroy()
-            pass
-
     def __enum(self, hwnd, ctx) -> None:
         shelldll = win32gui.FindWindowEx(0, 0, "SHELLDLL_DefView", None)
         if shelldll != 0:
@@ -1025,7 +1003,4 @@ class Helper:
             self.__paused_screens.remove(screen)
             window = self.__screen_windows[screen]
             window["window"].evaluate_js("let video = document.getElementsByTagName('video')[0]; "
-                                         "video.play();")
-            for window in self.__screen_windows.values():
-                window["window"].evaluate_js(f"let video = document.getElementsByTagName('video')[0]; "
-                                             f"video.currentTime = {max_time};")
+                                         "video.play(); video.currentTime = {max_time};")
