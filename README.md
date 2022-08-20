@@ -68,4 +68,4 @@ There are things that are not so obvious. Here I will explain a few things.
 </p>
 
 # 🛠 Credits 🛠
-This app was developed by <a href="https://github.com/Fidode07">Fidode07</a> (Me). Es würde mich sehr freuen, dass leute dieses Repo forken und weitereentwickeln, dennoch aber meine Credits stehen lasssen.
+This app was developed by <a href="https://github.com/Fidode07">Fidode07</a> (Me). It would make me very happy if people fork this repo and develop it further, but still leave my credits.
