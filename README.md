@@ -58,3 +58,14 @@ There are things that are not so obvious. Here I will explain a few things.
 
 <h2>2. How can I use a YouTube video as wallpaper?</h2>
 <p align="center">In the sidebar you have an option called "YouTube Video Wallpaper". Click on the option and then paste the link of the YouTube video you want to have into the text field. Now just click on "Use Wallpaper" and you're done.</p>
+
+# 🎥 The engine in use 🎥
+<p align="center">
+<h3>"Editor":</h3>
+<a href="https://streamable.com/tnrwzk">Watch on Streamable</a>
+<h3>YouTube-Video as Wallpaper:</h3>
+<a href="https://streamable.com/swpox1">Watch on Streamable</a>
+</p>
+
+# 🛠 Credits 🛠
+This app was developed by <a href="https://github.com/Fidode07">Fidode07</a> (Me). Es würde mich sehr freuen, dass leute dieses Repo forken und weitereentwickeln, dennoch aber meine Credits stehen lasssen.
